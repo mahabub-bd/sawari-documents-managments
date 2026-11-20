@@ -385,58 +385,49 @@ const AdminDashboard = async () => {
                         activity._id ||
                         `${action}-${activity.createdAt ?? index}`
                       }
-                      className="relative flex gap-3 pb-5 last:pb-0"
+                      className="relative flex items-center gap-3 pb-3.5 last:pb-0"
                     >
                       {index < userActivity.length - 1 && (
                         <span
                           aria-hidden="true"
-                          className="absolute left-4 top-9 h-[calc(100%-1.75rem)] w-px bg-border"
+                          className="absolute left-4 top-8 h-[calc(100%-1.25rem)] w-px bg-border"
                         />
                       )}
 
                       <span
                         className={cn(
-                          "relative z-10 mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-4 ring-card",
+                          "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full ring-4 ring-card",
                           tone
                         )}
+                        title={
+                          activity.createdAt
+                            ? formatDateTime(activity.createdAt)
+                            : undefined
+                        }
                       >
                         <Icon className="h-4 w-4" aria-hidden="true" />
                       </span>
 
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span
-                            className={cn(
-                              "inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium",
-                              tone
-                            )}
-                          >
-                            {action}
-                          </span>
-                          <span
-                            className="inline-flex items-center gap-1 text-xs text-muted-foreground"
-                            title={
-                              activity.createdAt
-                                ? formatDateTime(activity.createdAt)
-                                : undefined
-                            }
-                          >
-                            <Clock className="h-3 w-3" aria-hidden="true" />
-                            {relativeTime(activity.createdAt)}
-                          </span>
-                        </div>
+                      <div className="flex min-w-0 flex-1 items-center gap-2">
+                        <span
+                          className={cn(
+                            "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium",
+                            tone
+                          )}
+                        >
+                          {action}
+                        </span>
 
-                        <p className="mt-1 text-sm text-foreground/90">
+                        <span className="truncate text-sm text-foreground/90">
                           {activity.path
                             ? getActivityDescription(activity.path, action)
                             : "Unknown activity"}
-                        </p>
+                        </span>
 
-                        {activity.path && (
-                          <p className="mt-0.5 truncate font-mono text-xs text-muted-foreground">
-                            {activity.path}
-                          </p>
-                        )}
+                        <span className="ml-auto inline-flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" aria-hidden="true" />
+                          {relativeTime(activity.createdAt)}
+                        </span>
                       </div>
                     </li>
                   );

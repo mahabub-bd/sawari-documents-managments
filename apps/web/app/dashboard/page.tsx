@@ -305,15 +305,15 @@ const AdminDashboard = async () => {
                             {doc.registrationStatus}
                           </Badge>
                         </div>
-                        <p className="truncate text-xs text-muted-foreground">
-                          {doc.registrationNumber || "Not registered"} ·{" "}
-                          {doc.name}
-                        </p>
-                        <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground sm:hidden">
-                          <Gauge className="h-3 w-3 shrink-0" aria-hidden="true" />
-                          {(doc.odo ?? 0).toLocaleString()} km
-                          <span aria-hidden="true">·</span>
-                          {formatDateTime(doc.createdAt)}
+                        <p className="flex items-center gap-1.5 truncate text-xs text-muted-foreground">
+                          <span className="truncate">
+                            {doc.registrationNumber || "Not registered"} ·{" "}
+                            {doc.name}
+                          </span>
+                          <span className="shrink-0 whitespace-nowrap">
+                            · {(doc.odo ?? 0).toLocaleString()} km ·{" "}
+                            {formatDateTime(doc.createdAt)}
+                          </span>
                         </p>
                       </div>
 

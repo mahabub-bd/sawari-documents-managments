@@ -233,112 +233,63 @@ const AdminDashboard = async () => {
 
   return (
     <div className="space-y-6">
-      {/* Hero header */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00a2ed] to-[#0077b5] p-6 text-white shadow-sm sm:p-8">
-        {/* Decorative shapes */}
+      {/* Hero header — compact */}
+      <section className="relative overflow-hidden rounded-xl bg-gradient-to-br from-[#00a2ed] to-[#0077b5] px-4 py-4 text-white shadow-sm sm:px-5">
         <div
           aria-hidden="true"
-          className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-white/10 blur-2xl"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -bottom-28 left-1/3 h-64 w-64 rounded-full bg-white/5 blur-2xl"
+          className="absolute -right-16 -top-20 h-48 w-48 rounded-full bg-white/10 blur-2xl"
         />
 
-        <div className="relative space-y-6">
-          {/* Top row */}
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="flex items-center gap-2 text-sm font-medium text-white/80">
-              <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
-              Workspace overview
-            </p>
+        <div className="relative flex flex-wrap items-center gap-x-4 gap-y-3">
+          <Avatar className="h-10 w-10 shrink-0 border border-white/40">
+            <AvatarImage src={session?.user?.image || ""} alt={userName} />
+            <AvatarFallback className="bg-white/20 text-sm font-semibold text-white">
+              {getInitials(userName)}
+            </AvatarFallback>
+          </Avatar>
+
+          <div className="min-w-0 flex-1 basis-56">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/20">
-                <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+              <h1 className="truncate text-base font-bold tracking-tight">
+                Welcome back, {firstName}
+              </h1>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-[11px] font-medium capitalize">
+                <Shield className="h-3 w-3" aria-hidden="true" />
+                {userRole}
+              </span>
+              <span className="hidden items-center gap-1.5 rounded-full bg-white/15 px-2 py-0.5 text-[11px] font-medium md:inline-flex">
+                <CalendarDays className="h-3 w-3" aria-hidden="true" />
                 {today}
               </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/20">
-                <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-                Active account
-              </span>
             </div>
+            <p className="mt-0.5 flex items-center gap-1.5 truncate text-xs text-white/75">
+              <Mail className="h-3 w-3 shrink-0" aria-hidden="true" />
+              {userEmail}
+              <span className="hidden font-mono text-white/60 md:inline">
+                · {userId.slice(0, 10)}…
+                <CopyButton
+                  textToCopy={userId}
+                  className="h-4 w-4 text-white/60 hover:bg-white/15 hover:text-white"
+                />
+              </span>
+            </p>
           </div>
 
-          {/* Identity row */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-14 w-14 border-2 border-white/40 shadow-lg sm:h-16 sm:w-16">
-                <AvatarImage src={session?.user?.image || ""} alt={userName} />
-                <AvatarFallback className="bg-white/20 text-lg font-semibold text-white">
-                  {getInitials(userName)}
-                </AvatarFallback>
-              </Avatar>
-
-              <div className="min-w-0 space-y-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">
-                    Welcome back, {firstName}
-                  </h1>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium capitalize ring-1 ring-white/25">
-                    <Shield className="h-3 w-3" aria-hidden="true" />
-                    {userRole}
-                  </span>
-                </div>
-                <p className="flex items-center gap-1.5 truncate text-sm text-white/80">
-                  <Mail className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-                  {userEmail}
-                </p>
-              </div>
-            </div>
-
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <span className="hidden items-center gap-1 text-xs text-white/70 lg:flex">
+              <Clock className="h-3 w-3" aria-hidden="true" />
+              {lastSignIn ? formatDateTime(lastSignIn) : "No recent sign-in"}
+            </span>
             <Button
               asChild
               size="sm"
-              className="shrink-0 bg-white font-medium text-sky-700 hover:bg-white/90"
+              className="h-8 bg-white px-3 text-xs font-medium text-sky-700 hover:bg-white/90"
             >
               <Link href="/dashboard/documents">
-                <FileText className="h-4 w-4" aria-hidden="true" />
-                Manage documents
+                <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+                Documents
               </Link>
             </Button>
-          </div>
-
-          {/* Meta row */}
-          <div className="grid gap-4 border-t border-white/20 pt-5 sm:grid-cols-3">
-            <div className="space-y-1">
-              <p className="text-xs font-medium uppercase tracking-wide text-white/70">
-                User ID
-              </p>
-              <div className="flex items-center gap-1">
-                <span className="truncate font-mono text-xs text-white/90">
-                  {userId}
-                </span>
-                <CopyButton
-                  textToCopy={userId}
-                  className="text-white/70 hover:bg-white/15 hover:text-white"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1">
-              <p className="text-xs font-medium uppercase tracking-wide text-white/70">
-                Last active
-              </p>
-              <p className="text-sm font-medium">
-                {lastActivity?.createdAt
-                  ? relativeTime(lastActivity.createdAt)
-                  : "No activity yet"}
-              </p>
-            </div>
-
-            <div className="space-y-1">
-              <p className="text-xs font-medium uppercase tracking-wide text-white/70">
-                Last sign-in
-              </p>
-              <p className="text-sm font-medium">
-                {lastSignIn ? formatDateTime(lastSignIn) : "No recent sign-in"}
-              </p>
-            </div>
           </div>
         </div>
       </section>

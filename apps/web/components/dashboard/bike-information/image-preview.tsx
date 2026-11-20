@@ -83,7 +83,7 @@ export default function ImagePreview({
             placeholder="blur"
             blurDataURL={shimmerPlaceholder}
             priority={priority}
-            onLoadingComplete={() => setIsLoading(false)}
+            onLoad={() => setIsLoading(false)}
           />
         </Link>
         ) : (

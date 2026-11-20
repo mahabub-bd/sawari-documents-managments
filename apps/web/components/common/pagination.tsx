@@ -64,9 +64,11 @@ export function PaginationComponent({
   const arrowClass =
     "h-8 gap-1 rounded-lg px-2 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground";
 
+  const prevNextClass = cn(arrowClass, "mx-1");
+
   return (
     <Pagination className="justify-end">
-      <PaginationContent className="flex-wrap items-center gap-1.5">
+      <PaginationContent className="flex-wrap items-center gap-2">
         {/* Previous */}
         <PaginationItem>
           <PaginationLink
@@ -75,7 +77,7 @@ export function PaginationComponent({
             aria-disabled={safePage <= 1}
             tabIndex={safePage <= 1 ? -1 : undefined}
             className={cn(
-              arrowClass,
+              prevNextClass,
               safePage <= 1 && "pointer-events-none opacity-40"
             )}
             onClick={(e) => safePage > 1 && handleClick(safePage - 1, e)}
@@ -124,7 +126,7 @@ export function PaginationComponent({
             aria-disabled={safePage >= safeTotalPages}
             tabIndex={safePage >= safeTotalPages ? -1 : undefined}
             className={cn(
-              arrowClass,
+              prevNextClass,
               safePage >= safeTotalPages && "pointer-events-none opacity-40"
             )}
             onClick={(e) =>

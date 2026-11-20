@@ -235,7 +235,43 @@ export function UserListSearch({
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        {filteredUsers.length > 0 && (
+          <ul
+            aria-label="User list"
+            className="divide-y divide-border/60 sm:hidden"
+          >
+            {filteredUsers.map((user) => (
+              <li key={user._id} className="flex items-center gap-3 px-4 py-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-500/15 to-fuchsia-500/10 text-xs font-semibold text-violet-600 ring-1 ring-violet-500/20 dark:text-violet-400">
+                  {getInitials(user.name)}
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate text-sm font-medium">{user.name}</p>
+                    <RoleBadge role={user.role} />
+                  </div>
+                  <p className="truncate text-xs text-muted-foreground">
+                    {user.email}
+                  </p>
+                  <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <CalendarDays className="h-3 w-3 shrink-0" aria-hidden="true" />
+                    Joined{" "}
+                    {new Date(user.createdAt).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+
+                <UserActions id={user._id} user={user} />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <div className="hidden overflow-x-auto sm:block">
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/40 hover:bg-muted/40">

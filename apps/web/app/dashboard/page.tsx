@@ -383,7 +383,7 @@ const AdminDashboard = async () => {
                 All security deposits have been returned.
               </p>
             ) : (
-              <ol className="space-y-1.5">
+              <ol className="max-h-[336px] space-y-1.5 overflow-y-auto pr-1">
                 {pendingSecurityDocs.map((doc) => {
                   const isOld = doc.daysPending > 30;
 

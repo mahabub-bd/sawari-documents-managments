@@ -37,6 +37,7 @@ import {
 import { cn } from "@/lib/utils";
 import type { UserActivityTypes } from "@/types";
 import { fetchProtectedData } from "@/utils/apiServices";
+import { formatDateTime, timeAgo } from "@/utils/helper";
 
 import UserActivitySkeleton from "./user-activity-skeleton";
 
@@ -335,7 +336,60 @@ export function UserActivityClient({
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
+          <>
+          {/* Mobile: stacked cards */}
+          <ol className="divide-y divide-border/60 sm:hidden">
+            {activities.map((activity) => {
+              const { Icon, tone } = getActionMeta(activity.action);
+              const relative = (() => {
+                try {
+                  return timeAgo(activity.createdAt);
+                } catch {
+                  return "";
+                }
+              })();
+
+              return (
+                <li key={activity._id} className="flex gap-3 px-4 py-3">
+                  <span
+                    className={cn(
+                      "flex h-9 w-9 shrink-0 items-center justify-center rounded-full",
+                      tone
+                    )}
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                  </span>
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                      <p className="truncate text-sm font-medium">
+                        {activity.userId?.name ?? "Unknown user"}
+                      </p>
+                      <span
+                        className={cn(
+                          "inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-[11px] font-medium capitalize",
+                          tone
+                        )}
+                      >
+                        {activity.action}
+                      </span>
+                    </div>
+
+                    <p className="mt-0.5 truncate font-mono text-[11px] text-muted-foreground">
+                      {activity.path || "—"}
+                    </p>
+
+                    <p className="mt-0.5 text-[11px] text-muted-foreground">
+                      {relative} · {formatDateTime(activity.createdAt)}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+
+          {/* Tablet/desktop: table */}
+          <div className="hidden overflow-x-auto sm:block">
             <Table>
               <TableHeader>
                 <TableRow className="bg-muted/40 hover:bg-muted/40">
@@ -374,11 +428,12 @@ export function UserActivityClient({
               </TableBody>
             </Table>
           </div>
+          </>
         )}
 
         {!loading && !error && hasActivities && (
           <div className="flex flex-col gap-3 border-t border-border/60 bg-muted/20 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground sm:text-sm">
               Showing{" "}
               <span className="font-medium text-foreground">{startIndex}</span>–
               <span className="font-medium text-foreground">{endIndex}</span> of{" "}

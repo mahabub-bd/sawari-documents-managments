@@ -566,7 +566,7 @@ export default function BikeList() {
       {/* Pagination */}
       {meta.total > 0 && !isLoading && (
         <div className="flex flex-col items-center justify-between gap-2 rounded-xl border border-border/60 bg-muted/30 px-3 py-2 text-xs text-muted-foreground sm:flex-row">
-          <p>
+          <p className="shrink-0 whitespace-nowrap">
             Showing{" "}
             <span className="font-semibold text-foreground">
               {rangeStart}–{rangeEnd}

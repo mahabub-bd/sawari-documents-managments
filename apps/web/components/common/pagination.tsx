@@ -1,6 +1,6 @@
 "use client";
 
-import type React from "react";
+import React from "react";
 import { useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -66,7 +66,7 @@ export function PaginationComponent({
 
   return (
     <Pagination className="justify-end">
-      <PaginationContent className="flex-wrap items-center gap-1">
+      <PaginationContent className="flex-wrap items-center gap-1.5">
         {/* Previous */}
         <PaginationItem>
           <PaginationLink
@@ -91,9 +91,9 @@ export function PaginationComponent({
           const needsEllipsisBefore = previousPage && page - previousPage > 1;
 
           return (
-            <div key={page} className="flex items-center">
+            <React.Fragment key={page}>
               {needsEllipsisBefore && (
-                <PaginationItem>
+                <PaginationItem className="px-0.5">
                   <PaginationEllipsis className="text-muted-foreground" />
                 </PaginationItem>
               )}
@@ -112,7 +112,7 @@ export function PaginationComponent({
                   {page}
                 </PaginationLink>
               </PaginationItem>
-            </div>
+            </React.Fragment>
           );
         })}
 

@@ -1,117 +1,126 @@
-import {
-  Bike,
-  FileText,
-  Github,
-  Linkedin,
-  LinkedinIcon,
-  Mail,
-} from "lucide-react";
+import { Bike, FileText, Github, LifeBuoy, Linkedin, Mail } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+
+import { Logo } from "@/public";
+
+const HIGHLIGHTS = [
+  {
+    icon: Bike,
+    title: "Bike inventory",
+    description: "Manage your fleet efficiently",
+  },
+  {
+    icon: FileText,
+    title: "Document management",
+    description: "All paperwork in one vault",
+  },
+  {
+    icon: LifeBuoy,
+    title: "Support",
+    description: "Get help when you need it",
+  },
+];
+
+const SOCIALS = [
+  {
+    href: "https://github.com/mahabub-bd",
+    label: "GitHub",
+    icon: Github,
+  },
+  {
+    href: "https://www.linkedin.com/in/mahabubhossainbd/",
+    label: "LinkedIn",
+    icon: Linkedin,
+  },
+  {
+    href: "mailto:contact@mahabub.me",
+    label: "Email",
+    icon: Mail,
+  },
+];
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Features Section */}
+    <footer className="border-t bg-muted/30">
+      <div className="container mx-auto px-4">
+        {/* Highlights */}
         <section
           aria-labelledby="footer-features"
-          className="grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="grid grid-cols-1 gap-3 border-b py-8 sm:grid-cols-3"
         >
           <h2 id="footer-features" className="sr-only">
-            Key Features
+            Key features
           </h2>
-          <div className="flex flex-col items-center text-center">
-            <Bike className="h-6 w-6 mb-2 text-primary" />
-            <p className="text-sm font-medium">Bike Inventory</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Manage your fleet efficiently
-            </p>
-          </div>
-          <div className="flex flex-col items-center text-center">
-            <FileText className="h-6 w-6 mb-2 text-primary" />
-            <p className="text-sm font-medium">Document Management</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Organize all paperwork
-            </p>
-          </div>
-          <div className="flex flex-col items-center text-center">
-            <Mail className="h-6 w-6 mb-2 text-primary" />
-            <p className="text-sm font-medium">Contact Support</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Get help when needed
-            </p>
-          </div>
-          <div className="flex flex-col items-center text-center">
-            <Linkedin className="h-6 w-6 mb-2 text-primary" />
-            <p className="text-sm font-medium">Social Integration</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Stay connected with us
-            </p>
-          </div>
+          {HIGHLIGHTS.map(({ icon: Icon, title, description }) => (
+            <div
+              key={title}
+              className="flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted/60"
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+              </span>
+              <div>
+                <p className="text-sm font-medium">{title}</p>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  {description}
+                </p>
+              </div>
+            </div>
+          ))}
         </section>
 
-        {/* About Section */}
-        <section
-          aria-labelledby="footer-about"
-          className="mx-auto max-w-2xl text-center"
-        >
-          <h2 id="footer-about" className="sr-only">
-            About Sawari
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            A comprehensive bike inventory and document management application
-            designed to streamline your operations.
-          </p>
-        </section>
+        {/* Brand + socials */}
+        <div className="flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
+          <Link
+            href="/"
+            className="flex items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <Image
+              src={Logo}
+              alt="SawariBD home"
+              className="h-7 w-auto"
+              priority
+            />
+          </Link>
 
-        {/* Social Links */}
-        <div className="flex justify-center gap-4">
-          <Link
-            href="https://github.com/mahabub-bd"
-            className="text-muted-foreground hover:text-primary transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub"
+          <nav
+            aria-label="Social links"
+            className="flex items-center gap-1.5"
           >
-            <Github className="h-5 w-5" />
-          </Link>
-          <Link
-            href="https://www.linkedin.com/in/mahabubhossainbd/"
-            className="text-muted-foreground hover:text-primary transition-colors"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="LinkedIn"
-          >
-            <LinkedinIcon className="h-5 w-5" />
-          </Link>
-          <a
-            href="mailto:contact@mahabub.me"
-            className="text-muted-foreground hover:text-primary transition-colors"
-            aria-label="Email"
-          >
-            <Mail className="h-5 w-5" />
-          </a>
+            {SOCIALS.map(({ href, label, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+              </a>
+            ))}
+          </nav>
         </div>
 
-        {/* Copyright and Credits */}
+        {/* Legal */}
         <section
           aria-labelledby="footer-legal"
-          className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t"
+          className="flex flex-col items-center justify-between gap-2 border-t py-5 text-center sm:flex-row sm:text-left"
         >
           <h2 id="footer-legal" className="sr-only">
             Legal information
           </h2>
-          <p className="text-sm text-muted-foreground order-2 sm:order-1">
+          <p className="text-xs text-muted-foreground">
             &copy; {currentYear} Sawari. All rights reserved.
           </p>
-
-          <p className="text-xs text-muted-foreground order-1 sm:order-2">
-            Developed by{" "}
+          <p className="text-xs text-muted-foreground">
+            A bike inventory &amp; document management platform · Developed by{" "}
             <Link
               href="https://mahabub.me"
-              className="font-medium hover:text-primary transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+              className="font-medium text-foreground/80 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
               target="_blank"
               rel="noopener noreferrer"
             >

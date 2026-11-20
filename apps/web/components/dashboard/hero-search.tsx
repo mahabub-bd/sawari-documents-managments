@@ -1,41 +1,71 @@
 "use client";
 
-import { Bike, Search, SearchX } from "lucide-react";
+import { Bike, Loader2, Search, SearchX } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import BrandLogo from "@/components/dashboard/brand-logo";
-import type { BikeDetailsType } from "@/types";
 
 interface HeroSearchProps {
-  documents: BikeDetailsType[];
+  documents?: never;
 }
 
-export function HeroSearch({ documents }: HeroSearchProps) {
+/**
+ * Server-side document search: queries the API with a debounce,
+ * so it works across the entire collection.
+ */
+export function HeroSearch() {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [debounced, setDebounced] = useState("");
+  const [results, setResults] = useState<BikeResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const results = useMemo(() => {
-    const trimmed = query.trim().toLowerCase();
-    if (trimmed.length < 2) return [];
+  interface BikeResult {
+    _id: string;
+    bikeBrand: string;
+    bikeModel: string;
+    registrationNumber: string;
+    engineNumber: string;
+  }
 
-    return documents
-      .filter((doc) =>
-        [
-          doc.registrationNumber,
-          doc.engineNumber,
-          doc.chassisNumber,
-          doc.name,
-          doc.bikeBrand,
-          doc.bikeModel,
-        ]
-          .filter(Boolean)
-          .some((value) => value.toLowerCase().includes(trimmed))
-      )
-      .slice(0, 6);
-  }, [documents, query]);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(query.trim()), 350);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  useEffect(() => {
+    if (debounced.length < 2) {
+      setResults([]);
+      setIsSearching(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    setIsSearching(true);
+
+    const search = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/bike-information?search=${encodeURIComponent(debounced)}&limit=6`,
+          { signal: controller.signal, cache: "no-store" }
+        );
+        if (!response.ok) throw new Error(String(response.status));
+        const payload = await response.json();
+        setResults(Array.isArray(payload.data) ? payload.data : []);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setResults([]);
+      } finally {
+        setIsSearching(false);
+      }
+    };
+
+    search();
+    return () => controller.abort();
+  }, [debounced]);
 
   const openDocument = (id: string) => {
     setQuery("");
@@ -65,12 +95,21 @@ export function HeroSearch({ documents }: HeroSearchProps) {
         />
       </div>
 
-      {isOpen && query.trim().length >= 2 && (
+      {isOpen && debounced.length >= 2 && (
         <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-lg border border-border bg-card shadow-lg">
           {results.length === 0 ? (
             <p className="flex items-center gap-2 px-3 py-2.5 text-xs text-muted-foreground">
-              <SearchX className="h-3.5 w-3.5" aria-hidden="true" />
-              No documents match “{query.trim()}”
+              {isSearching ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                  Searching…
+                </>
+              ) : (
+                <>
+                  <SearchX className="h-3.5 w-3.5" aria-hidden="true" />
+                  No documents match “{debounced}”
+                </>
+              )}
             </p>
           ) : (
             <ul className="max-h-72 overflow-y-auto">

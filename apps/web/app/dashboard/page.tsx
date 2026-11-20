@@ -54,65 +54,40 @@ const AdminDashboard = async () => {
     timeZone: "Asia/Dhaka",
   });
 
-  // Fetch bike documents for stats + recent list
-  let documents: BikeDetailsType[] = [];
+  // Server-computed aggregates + recent documents (avoids loading all docs)
+  interface BikeStats {
+    total: number;
+    registered: number;
+    unregistered: number;
+    securityPending: number;
+    totalPurchaseValue: number;
+    addedThisWeek: number;
+    addedThisMonth: number;
+    recent: BikeDetailsType[];
+    unregisteredList: { _id: string; bikeBrand: string; bikeModel: string }[];
+    securityAging: (BikeDetailsType & { daysPending: number })[];
+  }
+
+  let stats: BikeStats | null = null;
   let documentsError: string | null = null;
 
   try {
-    const data = await fetchData("bike-information");
-    documents = Array.isArray(data) ? data : [];
+    stats = await fetchData("bike-information/stats");
   } catch (fetchError) {
-    console.error("Error loading bike documents:", fetchError);
-    documentsError = "Could not load bike documents right now.";
+    console.error("Error loading bike stats:", fetchError);
+    documentsError = "Could not load bike document stats right now.";
   }
 
-  const sortedDocuments = [...documents].sort(
-    (a, b) =>
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  );
-  const recentDocuments = sortedDocuments.slice(0, 5);
+  const documents = stats?.recent ?? [];
+  const registeredCount = stats?.registered ?? 0;
+  const pendingRegistrationCount = stats?.unregistered ?? 0;
+  const securityPendingCount = stats?.securityPending ?? 0;
+  const totalPurchaseValue = stats?.totalPurchaseValue ?? 0;
+  const addedThisWeek = stats?.addedThisWeek ?? 0;
+  const addedThisMonth = stats?.addedThisMonth ?? 0;
 
-  const registeredCount = documents.filter(
-    (bike) => bike.registrationStatus === "Registered"
-  ).length;
-  const pendingRegistrationCount =
-    documents.length - registeredCount;
-  const securityPendingCount = documents.filter(
-    (bike) => bike.securityAmount > 0 && !bike.securityMoneyReturned
-  ).length;
-  const totalPurchaseValue = documents.reduce(
-    (sum, bike) => sum + (bike.purchaseAmount || 0),
-    0
-  );
-
-  // Trend: documents added this week / month
-  const now = Date.now();
-  const DAY = 24 * 60 * 60 * 1000;
-  const addedThisWeek = documents.filter(
-    (bike) => now - new Date(bike.createdAt).getTime() <= 7 * DAY
-  ).length;
-  const addedThisMonth = documents.filter(
-    (bike) => now - new Date(bike.createdAt).getTime() <= 30 * DAY
-  ).length;
-
-  // Unregistered bikes for the alert banner
-  const unregisteredBikes = documents.filter(
-    (bike) => bike.registrationStatus !== "Registered"
-  );
-
-  // Pending security deposits with aging
-  const pendingSecurityDocs = documents
-    .filter(
-      (bike) => bike.securityAmount > 0 && !bike.securityMoneyReturned
-    )
-    .map((bike) => ({
-      ...bike,
-      daysPending: Math.max(
-        0,
-        Math.floor((now - new Date(bike.createdAt).getTime()) / DAY)
-      ),
-    }))
-    .sort((a, b) => b.daysPending - a.daysPending);
+  const unregisteredBikes = stats?.unregisteredList ?? [];
+  const pendingSecurityDocs = stats?.securityAging ?? [];
 
   return (
     <div className="space-y-6">
@@ -158,7 +133,7 @@ const AdminDashboard = async () => {
           </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-2">
-            <HeroSearch documents={documents} />
+            <HeroSearch />
             <Button
               asChild
               size="sm"
@@ -284,7 +259,7 @@ const AdminDashboard = async () => {
             <p className="rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-sm text-destructive">
               {documentsError}
             </p>
-          ) : recentDocuments.length === 0 ? (
+          ) : documents.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border/60 px-6 py-10 text-center">
               <span className="flex h-11 w-11 items-center justify-center rounded-full bg-muted">
                 <FileText
@@ -299,7 +274,7 @@ const AdminDashboard = async () => {
             </div>
           ) : (
             <ol className="space-y-1.5">
-              {recentDocuments.map((doc) => {
+              {documents.map((doc) => {
                 const isRegistered = doc.registrationStatus === "Registered";
 
                 return (

@@ -27,24 +27,28 @@ export function PaginationComponent({
 }: PaginationComponentProps) {
   const isMobile = useMediaQuery("(max-width: 640px)");
 
+  // Guard against invalid inputs so the component is safe with any data.
+  const safeTotalPages = Math.max(1, totalPages);
+  const safePage = Math.min(Math.max(1, currentPage), safeTotalPages);
+
   const visiblePages = useMemo(() => {
     const siblingsCount = isMobile ? 1 : 2;
 
     const pages = new Set<number>();
 
     for (
-      let i = Math.max(1, currentPage - siblingsCount);
-      i <= Math.min(totalPages, currentPage + siblingsCount);
+      let i = Math.max(1, safePage - siblingsCount);
+      i <= Math.min(safeTotalPages, safePage + siblingsCount);
       i++
     ) {
       pages.add(i);
     }
 
     pages.add(1);
-    pages.add(totalPages);
+    pages.add(safeTotalPages);
 
     return Array.from(pages).sort((a, b) => a - b);
-  }, [currentPage, totalPages, isMobile]);
+  }, [safePage, safeTotalPages, isMobile]);
 
   const handleClick = (page: number, e: React.MouseEvent) => {
     e.preventDefault();
@@ -58,12 +62,12 @@ export function PaginationComponent({
         <PaginationItem>
           <PaginationPrevious
             href="#"
-            aria-disabled={currentPage <= 1}
-            tabIndex={currentPage <= 1 ? -1 : undefined}
+            aria-disabled={safePage <= 1}
+            tabIndex={safePage <= 1 ? -1 : undefined}
             className={
-              currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
+              safePage <= 1 ? "pointer-events-none opacity-50" : undefined
             }
-            onClick={(e) => currentPage > 1 && handleClick(currentPage - 1, e)}
+            onClick={(e) => safePage > 1 && handleClick(safePage - 1, e)}
           />
         </PaginationItem>
 
@@ -82,7 +86,7 @@ export function PaginationComponent({
               <PaginationItem>
                 <PaginationLink
                   href="#"
-                  isActive={page === currentPage}
+                  isActive={page === safePage}
                   onClick={(e) => handleClick(page, e)}
                 >
                   {page}
@@ -96,15 +100,15 @@ export function PaginationComponent({
         <PaginationItem>
           <PaginationNext
             href="#"
-            aria-disabled={currentPage >= totalPages}
-            tabIndex={currentPage >= totalPages ? -1 : undefined}
+            aria-disabled={safePage >= safeTotalPages}
+            tabIndex={safePage >= safeTotalPages ? -1 : undefined}
             className={
-              currentPage >= totalPages
+              safePage >= safeTotalPages
                 ? "pointer-events-none opacity-50"
                 : undefined
             }
             onClick={(e) =>
-              currentPage < totalPages && handleClick(currentPage + 1, e)
+              safePage < safeTotalPages && handleClick(safePage + 1, e)
             }
           />
         </PaginationItem>

@@ -734,7 +734,7 @@ function DetailSection({
   );
 }
 
-const BikeItemSkeleton = () => {
+export function BikeItemSkeleton() {
   return (
     <Card className="overflow-hidden border-border/60 shadow-sm">
       <div className="space-y-4 p-4 sm:p-5">

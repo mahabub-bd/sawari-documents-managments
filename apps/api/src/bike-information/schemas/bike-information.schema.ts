@@ -99,3 +99,7 @@ export class BikeInformation {
 export type BikeInformationDocument = BikeInformation & Document;
 export const BikeInformationSchema =
   SchemaFactory.createForClass(BikeInformation);
+
+BikeInformationSchema.index({ createdAt: -1 });
+BikeInformationSchema.index({ bikeBrand: 1 });
+BikeInformationSchema.index({ registrationStatus: 1 });

@@ -14,11 +14,21 @@ import {
 } from "@/components/ui/dialog";
 import BikeAddForm from "../bike-information/bike-add-form";
 
-export const BikeAddAction = () => {
+interface BikeAddActionProps {
+  onCreated?: () => void;
+}
+
+export const BikeAddAction = ({ onCreated }: BikeAddActionProps) => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(value) => {
+        setOpen(value);
+        if (!value) onCreated?.();
+      }}
+    >
       <DialogTrigger asChild>
         <Button className="gap-2 bg-gradient-to-r from-sky-500 to-sky-500 text-white shadow-sm hover:from-sky-600 hover:to-sky-600">
           <Plus className="h-4 w-4" aria-hidden="true" />

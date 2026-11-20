@@ -1,14 +1,15 @@
 "use client";
 
-// Bike document inventory with search, filters, sorting, and pagination.
+// Bike document inventory: server-side search, filters, sorting, pagination.
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   AlertCircle,
   ArrowDownWideNarrow,
   Bike,
   FileText,
   Filter,
+  Loader2,
   RotateCcw,
   Search,
   SearchX,
@@ -31,18 +32,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { brands } from "@/constants";
-import { cn, getDateFilterRange, type DateRangeFilterType } from "@/lib/utils";
+import { backendUrl as apiUrl, brands } from "@/constants";
+import { cn, type DateRangeFilterType } from "@/lib/utils";
 import type { BikeDetailsType, Brand } from "@/types";
+import { fetchData } from "@/utils/apiServices";
 import BikeAddAction from "../modal/BikeAddAction";
-import BikeItem from "./bike-item";
-
-interface BikeProps {
-  bikedatas: BikeDetailsType[];
-  error?: string | null;
-}
+import BikeItem, { BikeItemSkeleton } from "./bike-item";
 
 type SortOption = "newest" | "oldest" | "brand";
+
+interface ListMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+interface DocStats {
+  total: number;
+  registered: number;
+  unregistered: number;
+  securityPending: number;
+  totalPurchaseValue: number;
+  addedThisWeek: number;
+  addedThisMonth: number;
+}
 
 const DATE_RANGE_LABELS: Record<Exclude<DateRangeFilterType, "all">, string> = {
   today: "Today",
@@ -58,7 +72,7 @@ const DATE_RANGE_LABELS: Record<Exclude<DateRangeFilterType, "all">, string> = {
 const STAT_TONES = {
   sky: "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
   emerald:
-    "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
+    "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400",
   amber:
     "bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400",
   rose: "bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400",
@@ -66,102 +80,134 @@ const STAT_TONES = {
 
 type StatTone = keyof typeof STAT_TONES;
 
-export default function BikeList({ bikedatas, error }: BikeProps) {
-  const data = Array.isArray(bikedatas) ? bikedatas : [];
+const ITEMS_PER_PAGE = 5;
 
+export default function BikeList() {
+  // Server-driven data
+  const [pageItems, setPageItems] = useState<BikeDetailsType[]>([]);
+  const [meta, setMeta] = useState<ListMeta>({
+    total: 0,
+    page: 1,
+    limit: ITEMS_PER_PAGE,
+    totalPages: 1,
+  });
+  const [stats, setStats] = useState<DocStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filters
   const [brandFilter, setBrandFilter] = useState<string>("all");
   const [yearFilter, setYearFilter] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState<string>("");
   const [dateRangeFilter, setDateRangeFilter] =
     useState<DateRangeFilterType>("all");
-  const [showFilters, setShowFilters] = useState<boolean>(false);
   const [sortBy, setSortBy] = useState<SortOption>("newest");
+  const [showFilters, setShowFilters] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 5;
+  const [reloadKey, setReloadKey] = useState<number>(0);
 
   const currentYear = new Date().getFullYear();
   const lastEightYears = Array.from({ length: 8 }, (_, i) => currentYear - i);
 
-  const filteredData = data.filter((bike) => {
-    const brandMatch =
-      brandFilter && brandFilter !== "all"
-        ? bike.bikeBrand === brandFilter
-        : true;
+  // Debounce search input
+  useEffect(() => {
+    const timer = setTimeout(
+      () => setDebouncedSearch(searchQuery.trim()),
+      400
+    );
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
-    const yearMatch = yearFilter ? bike.manufacturingYear === yearFilter : true;
+  // Reset to first page whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, brandFilter, yearFilter, dateRangeFilter, sortBy]);
 
-    const query = searchQuery.trim().toLowerCase();
-    const searchMatch = query
-      ? [
-          bike.engineNumber,
-          bike.chassisNumber,
-          bike.registrationNumber,
-          bike.bikeModel,
-          bike.name,
-        ].some((value) => value?.toLowerCase().includes(query))
-      : true;
+  // Fetch one page from the server
+  useEffect(() => {
+    const controller = new AbortController();
 
-    const dateFilterMatch = (() => {
-      if (dateRangeFilter === "all") return true;
+    const loadDocuments = async () => {
+      setIsLoading(true);
+      setError(null);
 
-      const range = getDateFilterRange(dateRangeFilter);
-      if (!range || !bike.createdAt) return true;
+      try {
+        const params = new URLSearchParams({
+          page: String(currentPage),
+          limit: String(ITEMS_PER_PAGE),
+          sort: sortBy,
+        });
+        if (debouncedSearch) params.set("search", debouncedSearch);
+        if (brandFilter !== "all") params.set("brand", brandFilter);
+        if (yearFilter !== null) params.set("year", String(yearFilter));
+        if (dateRangeFilter !== "all") params.set("range", dateRangeFilter);
 
-      const createdAt = new Date(bike.createdAt);
-      return createdAt >= range[0] && createdAt <= range[1];
-    })();
+        const response = await fetch(
+          `${apiUrl}/bike-information?${params.toString()}`,
+          { signal: controller.signal, cache: "no-store" }
+        );
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}`);
+        }
+        const payload = await response.json();
+        setPageItems(Array.isArray(payload.data) ? payload.data : []);
+        setMeta(
+          payload.meta ?? {
+            total: Array.isArray(payload.data) ? payload.data.length : 0,
+            page: 1,
+            limit: ITEMS_PER_PAGE,
+            totalPages: 1,
+          }
+        );
+      } catch (fetchError) {
+        if (fetchError instanceof DOMException && fetchError.name === "AbortError")
+          return;
+        console.error("Error loading bike documents:", fetchError);
+        setError(
+          "Could not load bike documents right now. Please refresh the page or try again later."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-    return brandMatch && yearMatch && searchMatch && dateFilterMatch;
-  });
+    loadDocuments();
+    return () => controller.abort();
+  }, [reloadKey, currentPage, debouncedSearch, brandFilter, yearFilter, dateRangeFilter, sortBy]);
 
-  const sortedData = [...filteredData].sort((a, b) => {
-    if (sortBy === "oldest") {
-      return (
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-      );
-    }
-    if (sortBy === "brand") {
-      return `${a.bikeBrand} ${a.bikeModel}`.localeCompare(
-        `${b.bikeBrand} ${b.bikeModel}`
-      );
-    }
-    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  });
+  // Fetch stats once (computed in the database)
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const s = await fetchData("bike-information/stats");
+        setStats(s);
+      } catch (statsError) {
+        console.error("Error loading stats:", statsError);
+      }
+    };
+    loadStats();
+  }, []);
 
-  const totalPages = Math.max(1, Math.ceil(sortedData.length / itemsPerPage));
-  const safePage = Math.min(currentPage, totalPages);
-  const indexOfLastItem = safePage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = sortedData.slice(indexOfFirstItem, indexOfLastItem);
+  const refreshData = () => setReloadKey((key) => key + 1);
 
   const hasActiveFilters =
     brandFilter !== "all" ||
     yearFilter !== null ||
-    searchQuery.trim() !== "" ||
+    debouncedSearch !== "" ||
     dateRangeFilter !== "all";
 
   const activeFilterCount = [
     brandFilter !== "all",
     yearFilter !== null,
-    searchQuery.trim() !== "",
+    debouncedSearch !== "",
     dateRangeFilter !== "all",
   ].filter(Boolean).length;
 
-  const registeredCount = data.filter(
-    (bike) => bike.registrationStatus === "Registered"
-  ).length;
-  const pendingRegistrationCount = data.length - registeredCount;
-  const pendingSecurityCount = data.filter(
-    (bike) => bike.securityAmount > 0 && !bike.securityMoneyReturned
-  ).length;
-
-  const selectedBrandName = brands.find(
-    (brand) => brand.id === brandFilter
-  )?.name;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [brandFilter, yearFilter, searchQuery, dateRangeFilter, sortBy]);
+  const selectedBrandName = useMemo(
+    () => brands.find((brand) => brand.id === brandFilter)?.name,
+    [brandFilter]
+  );
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -172,9 +218,15 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
     setBrandFilter("all");
     setYearFilter(null);
     setSearchQuery("");
+    setDebouncedSearch("");
     setDateRangeFilter("all");
+    setSortBy("newest");
     setCurrentPage(1);
   };
+
+  const safePage = Math.min(currentPage, meta.totalPages);
+  const rangeStart = meta.total === 0 ? 0 : (safePage - 1) * meta.limit + 1;
+  const rangeEnd = Math.min(safePage * meta.limit, meta.total);
 
   return (
     <div className="space-y-6">
@@ -210,7 +262,7 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
               </span>
             )}
           </Button>
-          <BikeAddAction />
+          <BikeAddAction onCreated={refreshData} />
         </div>
       </header>
 
@@ -230,28 +282,28 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
       >
         <StatCard
           label="Total documents"
-          value={data.length}
+          value={stats?.total ?? 0}
           hint="Bike records on file"
           icon={Bike}
           tone="sky"
         />
         <StatCard
           label="Registered"
-          value={registeredCount}
+          value={stats?.registered ?? 0}
           hint="Fully registered bikes"
           icon={ShieldCheck}
           tone="emerald"
         />
         <StatCard
           label="Pending registration"
-          value={pendingRegistrationCount}
+          value={stats?.unregistered ?? 0}
           hint="On test / unregistered"
           icon={FileText}
           tone="amber"
         />
         <StatCard
           label="Security pending"
-          value={pendingSecurityCount}
+          value={stats?.securityPending ?? 0}
           hint="Deposits not returned"
           icon={Wallet}
           tone="rose"
@@ -390,11 +442,17 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-lg font-semibold">Results</h2>
-            <Badge variant="secondary" className="font-normal">
-              {sortedData.length}{" "}
-              {sortedData.length === 1 ? "document" : "documents"}
-            </Badge>
-            {hasActiveFilters && (
+            {isLoading ? (
+              <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
+                Loading…
+              </span>
+            ) : (
+              <Badge variant="secondary" className="font-normal">
+                {meta.total} {meta.total === 1 ? "document" : "documents"}
+              </Badge>
+            )}
+            {hasActiveFilters && !isLoading && (
               <Badge
                 variant="outline"
                 className="border-sky-200 bg-sky-50 font-normal text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
@@ -425,11 +483,11 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
           </div>
         </div>
 
-        {hasActiveFilters && (
+        {hasActiveFilters && !isLoading && (
           <div className="flex flex-wrap items-center gap-2">
-            {searchQuery.trim() !== "" && (
+            {debouncedSearch !== "" && (
               <FilterChip
-                label={`Search: ${searchQuery.trim()}`}
+                label={`Search: ${debouncedSearch}`}
                 onRemove={() => setSearchQuery("")}
               />
             )}
@@ -466,8 +524,12 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
 
       {/* Documents */}
       <div className="space-y-3">
-        {currentItems.length > 0 ? (
-          currentItems.map((bike) => <BikeItem {...bike} key={bike._id} />)
+        {isLoading ? (
+          Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+            <BikeItemSkeleton key={`skeleton-${index}`} />
+          ))
+        ) : pageItems.length > 0 ? (
+          pageItems.map((bike) => <BikeItem {...bike} key={bike._id} />)
         ) : (
           <div className="rounded-xl border border-dashed border-border/60 bg-card/50 px-6 py-16 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-muted">
@@ -494,7 +556,7 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
                   Clear filters
                 </Button>
               ) : (
-                <BikeAddAction />
+                <BikeAddAction onCreated={refreshData} />
               )}
             </div>
           </div>
@@ -502,19 +564,20 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
       </div>
 
       {/* Pagination */}
-      {sortedData.length > 0 && (
+      {meta.total > 0 && (
         <div className="flex flex-col gap-3 rounded-xl border border-border/60 bg-card px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm text-muted-foreground">
             Showing{" "}
             <span className="font-medium text-foreground">
-              {indexOfFirstItem + 1}–{Math.min(indexOfLastItem, sortedData.length)}
+              {rangeStart}–{rangeEnd}
             </span>{" "}
-            of <span className="font-medium text-foreground">{sortedData.length}</span>{" "}
+            of{" "}
+            <span className="font-medium text-foreground">{meta.total}</span>{" "}
             documents
           </p>
           <PaginationComponent
             currentPage={safePage}
-            totalPages={totalPages}
+            totalPages={meta.totalPages}
             onPageChange={handlePageChange}
           />
         </div>

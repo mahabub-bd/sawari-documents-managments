@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Query,
   Patch,
   Post,
   Req,
@@ -101,8 +102,32 @@ export class BikeInformationController {
       },
     },
   })
-  async findAll() {
-    return this.bikeInformationService.findAll();
+  async findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('brand') brand?: string,
+    @Query('status') status?: string,
+    @Query('year') year?: string,
+    @Query('range') range?: string,
+    @Query('sort') sort?: string,
+  ) {
+    return this.bikeInformationService.findAll({
+      page,
+      limit,
+      search,
+      brand,
+      status,
+      year,
+      range,
+      sort,
+    });
+  }
+
+  @Get('stats')
+  @ApiOperation({ summary: 'Aggregated bike document statistics' })
+  stats() {
+    return this.bikeInformationService.stats();
   }
 
   @UseGuards(AccessTokenGuard)

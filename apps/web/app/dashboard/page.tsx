@@ -313,7 +313,7 @@ const AdminDashboard = async () => {
 
                       {/* Right-side meta (sm and up) */}
                       <div className="hidden shrink-0 items-center gap-2.5 sm:flex">
-                        <span className="items-center gap-1.5 text-xs text-muted-foreground">
+                        <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-muted-foreground">
                           <Gauge className="h-3 w-3" aria-hidden="true" />
                           {(doc.odo ?? 0).toLocaleString()} km
                         </span>

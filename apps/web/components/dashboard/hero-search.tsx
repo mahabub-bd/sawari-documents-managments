@@ -4,6 +4,7 @@ import { Bike, Search, SearchX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState } from "react";
 
+import BrandLogo from "@/components/dashboard/brand-logo";
 import type { BikeDetailsType } from "@/types";
 
 interface HeroSearchProps {
@@ -84,7 +85,7 @@ export function HeroSearch({ documents }: HeroSearchProps) {
                     }}
                   >
                     <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
-                      <Bike className="h-3.5 w-3.5" aria-hidden="true" />
+                      <BrandLogo brand={doc.bikeBrand} className="h-4 w-4" />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-xs font-medium capitalize">

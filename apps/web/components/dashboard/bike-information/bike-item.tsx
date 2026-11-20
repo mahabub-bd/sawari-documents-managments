@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import BrandLogo from "@/components/dashboard/brand-logo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -118,7 +119,11 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-start gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500/15 to-sky-500/10 text-sky-600 ring-1 ring-sky-500/20 dark:text-sky-400">
-              <Bike className="h-5 w-5" aria-hidden="true" />
+              <BrandLogo
+                brand={bikeDetails.bikeBrand}
+                className="h-6 w-6"
+                alt=""
+              />
             </span>
 
             <div className="min-w-0 space-y-1">

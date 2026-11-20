@@ -86,6 +86,7 @@ export interface BikeDetailsType {
 export interface Brand {
   id: string;
   name: string;
+  logo?: string;
 }
 
 export interface UserActivityTypes {

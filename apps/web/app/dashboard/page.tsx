@@ -20,6 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import BrandLogo from "@/components/dashboard/brand-logo";
 import { CopyButton } from "@/components/dashboard/copy-button";
 import HeroSearch from "@/components/dashboard/hero-search";
 import { getSession } from "@/lib/session";
@@ -308,7 +309,7 @@ const AdminDashboard = async () => {
                       className="group flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition-colors hover:border-border/60 hover:bg-muted/60"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <Bike className="h-4 w-4" aria-hidden="true" />
+                        <BrandLogo brand={doc.bikeBrand} className="h-5 w-5" />
                       </span>
 
                       <div className="min-w-0 flex-1">

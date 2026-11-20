@@ -1,0 +1,24 @@
+{
+  "name": "sawaribd-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SawariBD monorepo: backend (NestJS) + frontend (Next.js)",
+  "author": "Mahabub Hossain",
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:backend": "pnpm --filter sawari_backend dev",
+    "dev:frontend": "pnpm --filter sawaribd-documents dev",
+    "build": "pnpm -r build",
+    "build:backend": "pnpm --filter sawari_backend build",
+    "build:frontend": "pnpm --filter sawaribd-documents build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm --filter sawari_backend test",
+    "docker:up": "docker compose up --build -d",
+    "docker:down": "docker compose down"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@9.15.9"
+}

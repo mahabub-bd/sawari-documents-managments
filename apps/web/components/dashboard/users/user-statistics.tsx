@@ -66,7 +66,7 @@ export default async function UserStatistics({ userId }: { userId: string }) {
     return (
       <section
         aria-label="Account statistics"
-        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+        className="grid grid-cols-2 gap-2 sm:gap-4 xl:grid-cols-4"
       >
         <StatCard
           label="Total logins"

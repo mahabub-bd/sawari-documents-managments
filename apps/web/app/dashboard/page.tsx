@@ -186,7 +186,7 @@ const AdminDashboard = async () => {
       {/* Document statistics */}
       <section
         aria-label="Document statistics"
-        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+        className="grid grid-cols-2 gap-2 sm:gap-4 xl:grid-cols-4"
       >
         <DocStat
           icon={FileText}
@@ -498,14 +498,14 @@ function DocStat({
 }) {
   return (
     <Card className="border-border/60 shadow-sm transition-colors hover:border-primary/30">
-      <CardContent className="flex items-start justify-between gap-3 p-4 sm:p-5">
+      <CardContent className="flex items-start justify-between gap-2 p-3 sm:gap-3 sm:p-5">
         <div className="min-w-0 space-y-1">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
             {label}
           </p>
           <p
             className={cn(
-              "truncate text-lg font-semibold leading-tight",
+              "truncate text-base font-semibold leading-tight sm:text-lg",
               tone
             )}
           >

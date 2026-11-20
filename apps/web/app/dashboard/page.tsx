@@ -132,7 +132,7 @@ const AdminDashboard = async () => {
             </p>
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2">
+          <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto sm:shrink-0">
             <HeroSearch />
             <Button
               asChild

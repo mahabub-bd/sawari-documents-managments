@@ -12,7 +12,7 @@ export default function AdminDashboardLayout({
       <Navbar />
       <DashboardTopNav />
 
-      <main className="container mx-auto flex-1 px-4 py-6 sm:px-6 lg:py-8">
+      <main className="container mx-auto min-w-0 flex-1 overflow-x-hidden px-4 py-6 sm:px-6 lg:py-8">
         {children}
       </main>
 

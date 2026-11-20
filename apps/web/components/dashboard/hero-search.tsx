@@ -74,7 +74,7 @@ export function HeroSearch() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-sm">
+    <div ref={containerRef} className="relative min-w-0 flex-1 sm:w-64 sm:max-w-sm sm:flex-none">
       <div className="relative">
         <Search
           className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/70"

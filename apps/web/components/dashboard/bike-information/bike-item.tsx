@@ -115,10 +115,10 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   return (
     <Card className="overflow-hidden border-border/60 shadow-sm transition-shadow hover:shadow-md">
       {/* Header */}
-      <div className="flex flex-col gap-4 p-4 sm:p-5">
+      <div className="flex flex-col gap-2.5 p-3 sm:p-3.5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500/15 to-sky-500/10 text-sky-600 ring-1 ring-sky-500/20 dark:text-sky-400">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-sky-500/15 to-sky-500/10 text-sky-600 ring-1 ring-sky-500/20 dark:text-sky-400">
               <BrandLogo
                 brand={bikeDetails.bikeBrand}
                 className="h-6 w-6"
@@ -128,7 +128,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
 
             <div className="min-w-0 space-y-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h3 className="truncate text-base font-semibold capitalize sm:text-lg">
+                <h3 className="truncate text-sm font-semibold capitalize">
                   <Link
                     href={`/dashboard/documents/${bikeDetails._id}`}
                     className="transition-colors hover:text-sky-600 dark:hover:text-sky-400"
@@ -157,7 +157,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                   </Badge>
                 )}
               </div>
-              <p className="truncate font-mono text-xs text-muted-foreground">
+              <p className="truncate font-mono text-[11px] text-muted-foreground">
                 {bikeDetails.engineNumber} · {bikeDetails.chassisNumber}
               </p>
             </div>
@@ -170,7 +170,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                   <Button
                     variant="outline"
                     size="icon"
-                    className="h-8 w-8"
+                    className="h-7 w-7"
                     onClick={handlePrint}
                     aria-label="Print document"
                   >
@@ -188,7 +188,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                     asChild
                     variant="outline"
                     size="icon"
-                    className="h-8 w-8"
+                    className="h-7 w-7"
                     aria-label="Open full page"
                   >
                     <Link href={`/dashboard/documents/${bikeDetails._id}`}>
@@ -203,7 +203,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 gap-1.5"
+              className="h-7 gap-1 px-2 text-xs"
               onClick={toggleAccordion}
               aria-expanded={isExpanded}
             >
@@ -220,7 +220,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
         </div>
 
         {/* Quick facts */}
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
           <QuickFact
             icon={FileText}
             label="Registration"
@@ -608,9 +608,9 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
       )}
 
       {/* Footer */}
-      <div className="flex flex-col gap-3 border-t border-border/60 bg-muted/20 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
-        <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+      <div className="flex flex-col gap-2 border-t border-border/60 bg-muted/20 px-3 py-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+          <Calendar className="h-3 w-3" aria-hidden="true" />
           Added {formatDateTime(bikeDetails.createdAt)}
         </p>
 
@@ -694,16 +694,16 @@ function QuickFact({
   hintClassName?: string;
 }) {
   return (
-    <div className="rounded-lg border border-border/50 bg-muted/30 p-2.5">
-      <p className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-        <Icon className="h-3 w-3" aria-hidden="true" />
+    <div className="rounded-md border border-border/50 bg-muted/30 px-2 py-1.5">
+      <p className="flex items-center gap-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+        <Icon className="h-2.5 w-2.5" aria-hidden="true" />
         {label}
       </p>
-      <p className="mt-1 break-words text-sm font-medium">{value}</p>
+      <p className="mt-0.5 break-words text-xs font-medium">{value}</p>
       {hint && (
         <p
           className={cn(
-            "mt-0.5 truncate text-[11px] text-muted-foreground",
+            "mt-0.5 truncate text-[10px] text-muted-foreground",
             hintClassName
           )}
         >
@@ -746,7 +746,7 @@ export function BikeItemSkeleton() {
           </div>
           <Skeleton className="h-8 w-24 rounded-md" />
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-4">
           {Array.from({ length: 4 }).map((_, index) => (
             <Skeleton key={index} className="h-16 rounded-lg" />
           ))}

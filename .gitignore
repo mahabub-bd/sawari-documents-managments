@@ -20,3 +20,12 @@ coverage/
 .DS_Store
 Thumbs.db
 .turbo
+
+# Env (broad, from app-level gitignores)
+.env*
+
+# Generated / tooling
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+.nyc_output

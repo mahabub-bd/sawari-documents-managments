@@ -65,16 +65,16 @@ export default function MobileNavigation({ session }: { session: any }) {
       </SheetTrigger>
       <SheetContent side="right">
         <SheetTitle>
-          <Image src={Logo} alt="logo" width={80} />
+          <Image src={Logo} alt="logo" width={64} />
           <Link href="/signin" className="sr-only">
             Signin
           </Link>
         </SheetTitle>
 
-        <div className="flex flex-col items-start gap-4 p-6">
+        <div className="flex max-h-[calc(100dvh-6rem)] w-full flex-col items-start gap-2.5 overflow-y-auto p-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {session ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-border/60 bg-background px-3 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted">
+              <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg border border-border/60 bg-background px-2.5 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted">
                 <div className="flex items-center gap-2">
                   <CircleUserRound className="size-5 text-muted-foreground" />
                   <span className="max-w-[10rem] truncate">
@@ -125,7 +125,7 @@ export default function MobileNavigation({ session }: { session: any }) {
           {/* Dashboard navigation */}
           <nav
             aria-label="Dashboard navigation"
-            className="mt-2 flex w-full flex-col gap-1 border-t border-border/60 pt-4"
+            className="mt-1 flex w-full flex-col gap-0.5 border-t border-border/60 pt-3"
           >
             {adminSidebarMenu
               .filter(
@@ -140,7 +140,7 @@ export default function MobileNavigation({ session }: { session: any }) {
                 key={id}
                 href={href}
                 onClick={closeSheet}
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <span
                   className={cn(

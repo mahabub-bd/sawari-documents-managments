@@ -31,6 +31,9 @@ import {
   UserPlusIcon,
 } from "lucide-react";
 
+import { adminSidebarMenu } from "@/constants";
+import { cn } from "@/lib/utils";
+
 export default function MobileNavigation({ session }: { session: any }) {
   const [openSubMenu, setOpenSubMenu] = useState<number | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -118,6 +121,38 @@ export default function MobileNavigation({ session }: { session: any }) {
               Sign In
             </Link>
           )}
+
+          {/* Dashboard navigation */}
+          <nav
+            aria-label="Dashboard navigation"
+            className="mt-2 flex w-full flex-col gap-1 border-t border-border/60 pt-4"
+          >
+            {adminSidebarMenu
+              .filter(
+                ({ isAdminMenu }) =>
+                  !isAdminMenu ||
+                  ["admin", "moderator"].includes(
+                    session?.user?.role?.toLowerCase()
+                  )
+              )
+              .map(({ id, title, href, icon: Icon }) => (
+              <Link
+                key={id}
+                href={href}
+                onClick={closeSheet}
+                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span
+                  className={cn(
+                    "flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary"
+                  )}
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                </span>
+                {title}
+              </Link>
+            ))}
+          </nav>
         </div>
       </SheetContent>
     </Sheet>

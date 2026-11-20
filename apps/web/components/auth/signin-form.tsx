@@ -1,5 +1,6 @@
 "use client";
 
+import { AlertCircle } from "lucide-react";
 import { signIn } from "@/actions/auth";
 
 import { useActionState } from "react";
@@ -34,10 +35,10 @@ const SignInForm = () => {
 
       {state?.message && (
         <div
-          className={`mt-2 px-2 py-1 rounded border ${
-            state.message ? "text-red-800 bg-red-100 border-red-300" : ""
-          }`}
+          role="alert"
+          className="mt-2 flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2.5 text-destructive"
         >
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <p className="text-sm">{state.message}</p>
         </div>
       )}

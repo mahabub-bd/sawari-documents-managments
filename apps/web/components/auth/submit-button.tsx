@@ -10,7 +10,7 @@ export const SubmitButton = ({ children }: PropsWithChildren) => {
   return (
     <Button
       type="submit"
-      className="w-full bg-gray-900 text-gray-100 hover:bg-gray-800"
+      className="w-full bg-emerald-600 text-white hover:bg-emerald-700"
       aria-disabled={pending}
     >
       {pending && (

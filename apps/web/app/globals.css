@@ -84,4 +84,27 @@
   .animate-shimmer {
     animation: shimmer 1.5s infinite;
   }
+
+  /* Thin, brand-tinted scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary, #0091ea) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    background-color: color-mix(in srgb, #0091ea 55%, transparent);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #0091ea;
+  }
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
 }

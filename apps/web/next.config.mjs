@@ -1,4 +1,8 @@
 const nextConfig = {
+  // Turbopack needs the workspace root (monorepo root with the lockfile)
+  turbopack: {
+    root: "../..",
+  },
   output: "standalone",
   images: {
     remotePatterns: [

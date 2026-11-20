@@ -65,35 +65,57 @@ export async function signIn(
     };
   }
 
-  const response = await fetch(`${backendUrl}/auth/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(validationFields.data),
-  });
+  try {
+    const response = await fetch(`${backendUrl}/auth/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validationFields.data),
+    });
 
-  if (response.ok) {
-    const data = await response.json();
+    if (response.ok) {
+      const data = await response.json();
 
-    if (data.tokens) {
-      await createSession({
-        user: {
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          role: data.user.role,
-        },
-        accessToken: data.tokens.accessToken,
-        refreshToken: data.tokens.refreshToken,
-      });
-      redirect("/dashboard");
+      if (data.tokens) {
+        await createSession({
+          user: {
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            role: data.user.role,
+          },
+          accessToken: data.tokens.accessToken,
+          refreshToken: data.tokens.refreshToken,
+        });
+        redirect("/dashboard");
+      }
+
+      return {
+        message: "Invalid response from server. Please try again.",
+      };
     }
-  } else {
-    const data = await response.json();
+
+    const data = await response.json().catch(() => null);
 
     return {
-      message: data.message,
+      message: data?.message ?? `Sign in failed (${response.status}).`,
+    };
+  } catch (error) {
+    // `redirect()` and `next/navigation` control-flow errors must propagate
+    if (
+      error &&
+      typeof error === "object" &&
+      "digest" in error &&
+      typeof error.digest === "string" &&
+      error.digest.startsWith("NEXT_")
+    ) {
+      throw error;
+    }
+    console.error("Sign in error:", error);
+    return {
+      message:
+        "Unable to reach the server. Please check your connection and try again.",
     };
   }
 }

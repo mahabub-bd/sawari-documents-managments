@@ -33,7 +33,7 @@ export class UserActivityService {
   async getActivities(userId: string): Promise<UserActivity[]> {
     return this.userActivityModel
       .find({ userId })
-      .populate('userId', { _id: 1, name: 1 }) // Populate user info
+      .populate('userId', { _id: 1, name: 1, email: 1, role: 1 }) // Populate user info
       .sort({ createdAt: -1 }) // Order by most recent first
       .exec();
   }

@@ -53,9 +53,11 @@ export default function UserActivityList({
             <p className="truncate text-sm font-medium">
               {userId?.name ?? "Unknown user"}
             </p>
-            <p className="truncate text-xs text-muted-foreground">
-              {userId?.email ?? "—"}
-            </p>
+            {userId?.email && (
+              <p className="truncate text-xs text-muted-foreground">
+                {userId.email}
+              </p>
+            )}
           </div>
         </div>
       </TableCell>

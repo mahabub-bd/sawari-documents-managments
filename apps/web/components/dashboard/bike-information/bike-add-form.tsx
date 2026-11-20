@@ -526,7 +526,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
             <Button
               type="button"
               onClick={form.handleSubmit(onSubmit)}
-              className="flex items-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600"
+              className="flex items-center gap-2 bg-gradient-to-r from-sky-500 to-sky-500 text-white hover:from-sky-600 hover:to-sky-600"
             >
               <CheckCircle2 className="h-4 w-4" /> Save document
             </Button>
@@ -550,9 +550,9 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                 className={cn(
                   "flex items-center gap-2 rounded-full border px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3",
                   isActive
-                    ? "border-emerald-500 bg-emerald-500 text-white shadow-sm shadow-emerald-500/25"
+                    ? "border-sky-500 bg-sky-500 text-white shadow-sm shadow-sky-500/25"
                     : isComplete
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400"
+                      ? "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
                       : "border-border/60 bg-muted/40 text-muted-foreground"
                 )}
               >
@@ -562,7 +562,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                     isActive
                       ? "bg-white/20 text-white"
                       : isComplete
-                        ? "bg-emerald-500 text-white"
+                        ? "bg-sky-500 text-white"
                         : "bg-background text-muted-foreground"
                   )}
                 >
@@ -579,7 +579,7 @@ const BikeAddForm: React.FC<BikeAddFormProps> = ({ isOpen }) => {
                 <div
                   className={cn(
                     "h-px w-4 sm:w-6",
-                    isComplete ? "bg-emerald-400" : "bg-border"
+                    isComplete ? "bg-sky-400" : "bg-border"
                   )}
                 />
               )}

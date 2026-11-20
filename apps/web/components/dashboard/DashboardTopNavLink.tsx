@@ -9,7 +9,7 @@ import type { DashboardMenuTone } from "@/types";
 const toneActive: Record<DashboardMenuTone, string> = {
   sky: "border-transparent bg-gradient-to-r from-sky-500 to-cyan-500 text-white shadow-sm shadow-sky-500/25",
   emerald:
-    "border-transparent bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm shadow-emerald-500/25",
+    "border-transparent bg-gradient-to-r from-sky-500 to-sky-500 text-white shadow-sm shadow-sky-500/25",
   violet:
     "border-transparent bg-gradient-to-r from-violet-500 to-purple-500 text-white shadow-sm shadow-violet-500/25",
   amber:
@@ -19,7 +19,7 @@ const toneActive: Record<DashboardMenuTone, string> = {
 const toneHover: Record<DashboardMenuTone, string> = {
   sky: "hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:hover:border-sky-500/30 dark:hover:bg-sky-500/10 dark:hover:text-sky-300",
   emerald:
-    "hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 dark:hover:border-emerald-500/30 dark:hover:bg-emerald-500/10 dark:hover:text-emerald-300",
+    "hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 dark:hover:border-sky-500/30 dark:hover:bg-sky-500/10 dark:hover:text-sky-300",
   violet:
     "hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 dark:hover:border-violet-500/30 dark:hover:bg-violet-500/10 dark:hover:text-violet-300",
   amber:

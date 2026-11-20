@@ -55,7 +55,7 @@ export default function VideoPreview({
         </span>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-border/60 bg-muted/20 transition-colors group-hover:border-emerald-300/60 dark:group-hover:border-emerald-500/30">
+      <div className="overflow-hidden rounded-xl border border-border/60 bg-muted/20 transition-colors group-hover:border-sky-300/60 dark:group-hover:border-sky-500/30">
         {videoUrl ? (
         <div
           className={cn(
@@ -77,7 +77,7 @@ export default function VideoPreview({
                 }
               }}
             >
-              <div className="rounded-full bg-emerald-600/95 p-3.5 text-white shadow-lg shadow-emerald-600/25 transition-transform duration-300 hover:scale-110">
+              <div className="rounded-full bg-sky-600/95 p-3.5 text-white shadow-lg shadow-sky-600/25 transition-transform duration-300 hover:scale-110">
                 <Play className="h-6 w-6 fill-current" aria-hidden="true" />
               </div>
             </div>

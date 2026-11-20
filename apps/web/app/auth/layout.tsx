@@ -26,15 +26,15 @@ export default function AuthLayout({ children }: PropsWithChildren) {
   return (
     <div className="flex min-h-screen bg-background">
       {/* Brand panel — desktop only */}
-      <aside className="relative hidden w-[45%] max-w-xl flex-col justify-between overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-800 p-10 text-emerald-50 lg:flex">
+      <aside className="relative hidden w-[45%] max-w-xl flex-col justify-between overflow-hidden bg-gradient-to-br from-sky-950 via-sky-900 to-sky-800 p-10 text-sky-50 lg:flex">
         {/* Decorative shapes */}
         <div
           aria-hidden="true"
-          className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-400/10 blur-2xl"
+          className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-sky-400/10 blur-2xl"
         />
         <div
           aria-hidden="true"
-          className="absolute -bottom-32 -left-16 h-80 w-80 rounded-full bg-teal-300/10 blur-2xl"
+          className="absolute -bottom-32 -left-16 h-80 w-80 rounded-full bg-sky-300/10 blur-2xl"
         />
 
         <div className="relative flex items-center gap-3">
@@ -64,7 +64,7 @@ export default function AuthLayout({ children }: PropsWithChildren) {
                 </span>
                 <div>
                   <p className="text-sm font-semibold">{title}</p>
-                  <p className="mt-0.5 text-sm text-emerald-200/80">
+                  <p className="mt-0.5 text-sm text-sky-200/80">
                     {description}
                   </p>
                 </div>
@@ -73,7 +73,7 @@ export default function AuthLayout({ children }: PropsWithChildren) {
           </ul>
         </div>
 
-        <p className="relative flex items-center gap-1.5 text-xs text-emerald-200/70">
+        <p className="relative flex items-center gap-1.5 text-xs text-sky-200/70">
           <ShieldCheck className="h-4 w-4" aria-hidden="true" />
           Role-based access · Encrypted sessions · Activity auditing
         </p>

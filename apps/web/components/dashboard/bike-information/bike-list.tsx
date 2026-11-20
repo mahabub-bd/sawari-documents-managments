@@ -58,7 +58,7 @@ const DATE_RANGE_LABELS: Record<Exclude<DateRangeFilterType, "all">, string> = {
 const STAT_TONES = {
   sky: "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
   emerald:
-    "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400",
+    "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
   amber:
     "bg-amber-100 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400",
   rose: "bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400",
@@ -205,7 +205,7 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
             <Filter className="h-4 w-4" aria-hidden="true" />
             Filters
             {activeFilterCount > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[11px] font-semibold text-white">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sky-500 px-1.5 text-[11px] font-semibold text-white">
                 {activeFilterCount}
               </span>
             )}
@@ -397,7 +397,7 @@ export default function BikeList({ bikedatas, error }: BikeProps) {
             {hasActiveFilters && (
               <Badge
                 variant="outline"
-                className="border-emerald-200 bg-emerald-50 font-normal text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400"
+                className="border-sky-200 bg-sky-50 font-normal text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
               >
                 Filtered
               </Badge>

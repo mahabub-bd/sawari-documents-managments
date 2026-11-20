@@ -7,7 +7,7 @@ import DashboardTopNavLink from "./DashboardTopNavLink";
 const toneIcon: Record<DashboardMenuTone, string> = {
   sky: "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
   emerald:
-    "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400",
+    "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
   violet:
     "bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-400",
   amber:

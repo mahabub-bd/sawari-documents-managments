@@ -44,7 +44,7 @@ const STAT_TONES = {
   rose: "bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400",
   sky: "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
   emerald:
-    "bg-emerald-100 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400",
+    "bg-sky-100 text-sky-600 dark:bg-sky-500/15 dark:text-sky-400",
 } as const;
 
 type StatTone = keyof typeof STAT_TONES;

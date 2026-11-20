@@ -20,7 +20,7 @@ export const BikeAddAction = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-sm hover:from-emerald-600 hover:to-teal-600">
+        <Button className="gap-2 bg-gradient-to-r from-sky-500 to-sky-500 text-white shadow-sm hover:from-sky-600 hover:to-sky-600">
           <Plus className="h-4 w-4" aria-hidden="true" />
           Add bike
         </Button>

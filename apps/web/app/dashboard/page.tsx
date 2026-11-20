@@ -53,7 +53,7 @@ const getActionInfo = (action: string): ActionInfo => {
   if (actionLower.includes("sign in") || actionLower.includes("login")) {
     return {
       icon: LogIn,
-      tone: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
+      tone: "bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400",
     };
   }
 
@@ -298,7 +298,7 @@ const AdminDashboard = async () => {
           <div className="flex flex-wrap items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-xs text-muted-foreground">
               <CheckCircle2
-                className="h-3.5 w-3.5 text-emerald-500"
+                className="h-3.5 w-3.5 text-sky-500"
                 aria-hidden="true"
               />
               Active account
@@ -549,21 +549,21 @@ const AdminDashboard = async () => {
               <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
                 <li className="flex gap-2">
                   <CheckCircle2
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500"
+                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-500"
                     aria-hidden="true"
                   />
                   Keep vehicle documents up to date after every sale.
                 </li>
                 <li className="flex gap-2">
                   <CheckCircle2
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500"
+                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-500"
                     aria-hidden="true"
                   />
                   Review recent activity for unexpected changes.
                 </li>
                 <li className="flex gap-2">
                   <CheckCircle2
-                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500"
+                    className="mt-0.5 h-3.5 w-3.5 shrink-0 text-sky-500"
                     aria-hidden="true"
                   />
                   Contact an administrator to request access changes.

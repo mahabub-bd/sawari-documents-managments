@@ -108,7 +108,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
   }
 
   const registrationTone = isRegistered
-    ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400"
+    ? "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
     : "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400";
 
   return (
@@ -117,7 +117,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
       <div className="flex flex-col gap-4 p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-start gap-3">
-            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500/15 to-teal-500/10 text-emerald-600 ring-1 ring-emerald-500/20 dark:text-emerald-400">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500/15 to-sky-500/10 text-sky-600 ring-1 ring-sky-500/20 dark:text-sky-400">
               <Bike className="h-5 w-5" aria-hidden="true" />
             </span>
 
@@ -126,7 +126,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                 <h3 className="truncate text-base font-semibold capitalize sm:text-lg">
                   <Link
                     href={`/dashboard/documents/${bikeDetails._id}`}
-                    className="transition-colors hover:text-emerald-600 dark:hover:text-emerald-400"
+                    className="transition-colors hover:text-sky-600 dark:hover:text-sky-400"
                   >
                     {bikeDetails.bikeBrand} {bikeDetails.bikeModel}
                   </Link>
@@ -250,7 +250,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
               pendingSecurity
                 ? "text-amber-600 dark:text-amber-400"
                 : securityMoneyReturned
-                  ? "text-emerald-600 dark:text-emerald-400"
+                  ? "text-sky-600 dark:text-sky-400"
                   : undefined
             }
           />
@@ -270,21 +270,21 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
               <TabsList className="h-auto w-full justify-start gap-1 overflow-x-auto rounded-none bg-transparent p-0">
                 <TabsTrigger
                   value="details"
-                  className="gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent data-[state=active]:text-emerald-700 data-[state=active]:shadow-none dark:data-[state=active]:text-emerald-400"
+                  className="gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-sky-500 data-[state=active]:bg-transparent data-[state=active]:text-sky-700 data-[state=active]:shadow-none dark:data-[state=active]:text-sky-400"
                 >
                   <Bike className="h-4 w-4" aria-hidden="true" />
                   Details
                 </TabsTrigger>
                 <TabsTrigger
                   value="documents"
-                  className="gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent data-[state=active]:text-emerald-700 data-[state=active]:shadow-none dark:data-[state=active]:text-emerald-400"
+                  className="gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-sky-500 data-[state=active]:bg-transparent data-[state=active]:text-sky-700 data-[state=active]:shadow-none dark:data-[state=active]:text-sky-400"
                 >
                   <FileText className="h-4 w-4" aria-hidden="true" />
                   Documents
                 </TabsTrigger>
                 <TabsTrigger
                   value="transaction"
-                  className="gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-emerald-500 data-[state=active]:bg-transparent data-[state=active]:text-emerald-700 data-[state=active]:shadow-none dark:data-[state=active]:text-emerald-400"
+                  className="gap-2 rounded-none border-b-2 border-transparent px-3 py-2.5 text-sm font-medium text-muted-foreground data-[state=active]:border-sky-500 data-[state=active]:bg-transparent data-[state=active]:text-sky-700 data-[state=active]:shadow-none dark:data-[state=active]:text-sky-400"
                 >
                   <DollarSign className="h-4 w-4" aria-hidden="true" />
                   Transaction
@@ -451,7 +451,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                         <TableRowData
                           label="Purchase amount"
                           value={
-                            <span className="font-medium text-emerald-600 dark:text-emerald-400">
+                            <span className="font-medium text-sky-600 dark:text-sky-400">
                               {formatCurrency(bikeDetails.purchaseAmount)}
                             </span>
                           }
@@ -482,7 +482,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                                   className={cn(
                                     "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                                     securityMoneyReturned
-                                      ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400"
+                                      ? "border-sky-200 bg-sky-50 text-sky-700 hover:bg-sky-100 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
                                       : "border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400"
                                   )}
                                 >
@@ -513,7 +513,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
                                 className={cn(
                                   "inline-flex items-center gap-1.5 text-sm",
                                   securityMoneyReturned
-                                    ? "text-emerald-600 dark:text-emerald-400"
+                                    ? "text-sky-600 dark:text-sky-400"
                                     : "text-amber-600 dark:text-amber-400"
                                 )}
                               >
@@ -615,7 +615,7 @@ const BikeItem = ({ isLoading = false, ...bikeDetails }: BikeItemProps) => {
               <TooltipTrigger asChild>
                 <Badge
                   variant="outline"
-                  className="gap-1.5 border-emerald-200 bg-emerald-50 py-1 pl-2 pr-2.5 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-400"
+                  className="gap-1.5 border-sky-200 bg-sky-50 py-1 pl-2 pr-2.5 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
                 >
                   <CreditCard className="h-3.5 w-3.5" aria-hidden="true" />
                   {formatCurrency(bikeDetails.purchaseAmount)}

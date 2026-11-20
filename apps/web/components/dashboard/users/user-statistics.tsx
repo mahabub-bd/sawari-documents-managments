@@ -80,7 +80,7 @@ export default async function UserStatistics({ userId }: { userId: string }) {
           value={actionToday.length}
           hint="Recorded since midnight"
           icon={Sparkles}
-          tone="bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+          tone="bg-sky-50 text-sky-600 dark:bg-sky-500/10 dark:text-sky-400"
         />
         <StatCard
           label="Last active"

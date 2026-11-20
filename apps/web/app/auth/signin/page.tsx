@@ -25,7 +25,7 @@ export default function SignInPage() {
         </div>
 
         <div className="mb-6 border-t border-border/60 pt-6 text-center">
-          <span className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 ring-1 ring-emerald-500/20 dark:text-emerald-400">
+          <span className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-sky-500/10 text-sky-600 ring-1 ring-sky-500/20 dark:text-sky-400">
             <LockKeyhole className="h-5 w-5" aria-hidden="true" />
           </span>
           <h1 className="text-2xl font-bold tracking-tight text-foreground">
@@ -42,7 +42,7 @@ export default function SignInPage() {
           Trouble signing in?
           <Link
             href="/"
-            className="inline-flex items-center gap-0.5 font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+            className="inline-flex items-center gap-0.5 font-medium text-sky-600 hover:underline dark:text-sky-400"
           >
             Contact support
             <ArrowRight className="h-3 w-3" aria-hidden="true" />

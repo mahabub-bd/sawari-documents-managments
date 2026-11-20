@@ -233,120 +233,115 @@ const AdminDashboard = async () => {
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
-      <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
-            <span>Workspace overview</span>
+      {/* Hero header */}
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#00a2ed] to-[#0077b5] p-6 text-white shadow-sm sm:p-8">
+        {/* Decorative shapes */}
+        <div
+          aria-hidden="true"
+          className="absolute -right-20 -top-24 h-64 w-64 rounded-full bg-white/10 blur-2xl"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -bottom-28 left-1/3 h-64 w-64 rounded-full bg-white/5 blur-2xl"
+        />
+
+        <div className="relative space-y-6">
+          {/* Top row */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="flex items-center gap-2 text-sm font-medium text-white/80">
+              <LayoutDashboard className="h-4 w-4" aria-hidden="true" />
+              Workspace overview
+            </p>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/20">
+                <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
+                {today}
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium ring-1 ring-white/20">
+                <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                Active account
+              </span>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
-            Dashboard
-          </h1>
-          <p className="max-w-2xl text-sm text-muted-foreground">
-            Welcome back,{" "}
-            <span className="font-medium text-foreground">{firstName}</span>.
-            Here is a snapshot of your account and recent activity.
-          </p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge
-            variant="outline"
-            className="gap-1.5 border-border/60 bg-background/60 py-1.5 font-normal"
-          >
-            <CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />
-            {today}
-          </Badge>
-          <Button asChild size="sm">
-            <Link href="/dashboard/documents">
-              <FileText className="h-4 w-4" aria-hidden="true" />
-              Manage documents
-            </Link>
-          </Button>
-        </div>
-      </header>
+          {/* Identity row */}
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-14 w-14 border-2 border-white/40 shadow-lg sm:h-16 sm:w-16">
+                <AvatarImage src={session?.user?.image || ""} alt={userName} />
+                <AvatarFallback className="bg-white/20 text-lg font-semibold text-white">
+                  {getInitials(userName)}
+                </AvatarFallback>
+              </Avatar>
 
-      {/* Profile banner */}
-      <Card className="overflow-hidden border-border/60 shadow-sm">
-        <div className="h-20 bg-gradient-to-r from-primary/15 via-primary/5 to-transparent" />
-
-        <CardContent className="-mt-8 flex flex-col gap-4 p-4 pt-0 sm:flex-row sm:items-end sm:justify-between sm:p-6 sm:pt-0">
-          <div className="flex items-end gap-4">
-            <Avatar className="h-16 w-16 border-4 border-card shadow-sm sm:h-20 sm:w-20">
-              <AvatarImage src={session?.user?.image || ""} alt={userName} />
-              <AvatarFallback className="bg-primary text-lg font-semibold text-primary-foreground">
-                {getInitials(userName)}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="space-y-1 pb-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h2 className="text-lg font-semibold sm:text-xl">{userName}</h2>
-                <Badge variant="secondary" className="gap-1 capitalize">
-                  <Shield className="h-3 w-3" aria-hidden="true" />
-                  {userRole}
-                </Badge>
+              <div className="min-w-0 space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">
+                    Welcome back, {firstName}
+                  </h1>
+                  <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium capitalize ring-1 ring-white/25">
+                    <Shield className="h-3 w-3" aria-hidden="true" />
+                    {userRole}
+                  </span>
+                </div>
+                <p className="flex items-center gap-1.5 truncate text-sm text-white/80">
+                  <Mail className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  {userEmail}
+                </p>
               </div>
-              <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
-                <Mail className="h-3.5 w-3.5" aria-hidden="true" />
-                {userEmail}
+            </div>
+
+            <Button
+              asChild
+              size="sm"
+              className="shrink-0 bg-white font-medium text-sky-700 hover:bg-white/90"
+            >
+              <Link href="/dashboard/documents">
+                <FileText className="h-4 w-4" aria-hidden="true" />
+                Manage documents
+              </Link>
+            </Button>
+          </div>
+
+          {/* Meta row */}
+          <div className="grid gap-4 border-t border-white/20 pt-5 sm:grid-cols-3">
+            <div className="space-y-1">
+              <p className="text-xs font-medium uppercase tracking-wide text-white/70">
+                User ID
+              </p>
+              <div className="flex items-center gap-1">
+                <span className="truncate font-mono text-xs text-white/90">
+                  {userId}
+                </span>
+                <CopyButton
+                  textToCopy={userId}
+                  className="text-white/70 hover:bg-white/15 hover:text-white"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs font-medium uppercase tracking-wide text-white/70">
+                Last active
+              </p>
+              <p className="text-sm font-medium">
+                {lastActivity?.createdAt
+                  ? relativeTime(lastActivity.createdAt)
+                  : "No activity yet"}
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <p className="text-xs font-medium uppercase tracking-wide text-white/70">
+                Last sign-in
+              </p>
+              <p className="text-sm font-medium">
+                {lastSignIn ? formatDateTime(lastSignIn) : "No recent sign-in"}
               </p>
             </div>
           </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-xs text-muted-foreground">
-              <CheckCircle2
-                className="h-3.5 w-3.5 text-sky-500"
-                aria-hidden="true"
-              />
-              Active account
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-xs text-muted-foreground">
-              <Clock className="h-3.5 w-3.5" aria-hidden="true" />
-              {lastActivity?.createdAt
-                ? `Last active ${relativeTime(lastActivity.createdAt)}`
-                : "No activity yet"}
-            </span>
-          </div>
-        </CardContent>
-
-        <Separator />
-
-        <div className="grid gap-4 p-4 sm:grid-cols-3 sm:p-6">
-          <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              User ID
-            </p>
-            <div className="flex items-center gap-1">
-              <span className="truncate font-mono text-xs text-foreground">
-                {userId}
-              </span>
-              <CopyButton textToCopy={userId} />
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Access level
-            </p>
-            <p className="flex items-center gap-1.5 text-sm font-medium capitalize">
-              <User className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />
-              {userRole}
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Last sign-in
-            </p>
-            <p className="text-sm font-medium">
-              {lastSignIn ? formatDateTime(lastSignIn) : "No recent sign-in"}
-            </p>
-          </div>
         </div>
-      </Card>
+      </section>
 
       {/* Statistics */}
       {userRole === "admin" &&

@@ -80,7 +80,10 @@ export default function MobileNavigation({ session }: { session: any }) {
                 </div>
                 <ChevronDown className="w-4 h-4 text-muted-foreground" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-64 rounded-lg border-border/60 p-2 shadow-md">
+              <DropdownMenuContent
+                sideOffset={8}
+                className="pointer-events-auto z-[70] w-64 rounded-lg border border-border/60 bg-popover p-2 shadow-md"
+              >
                 <DropdownMenuLabel className="px-2 py-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                   Welcome, {session.user.name}
                 </DropdownMenuLabel>

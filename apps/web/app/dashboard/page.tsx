@@ -281,47 +281,70 @@ const AdminDashboard = async () => {
                   <li key={doc._id}>
                     <Link
                       href={`/dashboard/documents/${doc._id}`}
-                      className="group flex items-center gap-3 rounded-lg border border-transparent p-2.5 transition-colors hover:border-border/60 hover:bg-muted/60"
+                      className="group flex items-start gap-2.5 rounded-lg border border-transparent p-2.5 transition-colors hover:border-border/60 hover:bg-muted/60 sm:items-center sm:gap-3"
                     >
                       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                         <BrandLogo brand={doc.bikeBrand} className="h-5 w-5" />
                       </span>
 
+                      {/* Text block */}
                       <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium capitalize">
-                          {doc.bikeBrand} {doc.bikeModel}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="truncate text-sm font-medium capitalize">
+                            {doc.bikeBrand} {doc.bikeModel}
+                          </p>
+                          <Badge
+                            variant="outline"
+                            className={cn(
+                              "shrink-0 px-1.5 py-0 text-[10px] sm:hidden",
+                              isRegistered
+                                ? "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
+                                : "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400"
+                            )}
+                          >
+                            {doc.registrationStatus}
+                          </Badge>
+                        </div>
                         <p className="truncate text-xs text-muted-foreground">
                           {doc.registrationNumber || "Not registered"} ·{" "}
                           {doc.name}
                         </p>
+                        <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground sm:hidden">
+                          <Gauge className="h-3 w-3 shrink-0" aria-hidden="true" />
+                          {(doc.odo ?? 0).toLocaleString()} km
+                          <span aria-hidden="true">·</span>
+                          {formatDateTime(doc.createdAt)}
+                        </p>
                       </div>
 
-                      <span className="hidden items-center gap-1.5 text-xs text-muted-foreground sm:flex">
-                        <Gauge className="h-3 w-3" aria-hidden="true" />
-                        {(doc.odo ?? 0).toLocaleString()} km
-                      </span>
+                      {/* Right-side meta (sm and up) */}
+                      <div className="hidden shrink-0 items-center gap-2.5 sm:flex">
+                        <span className="items-center gap-1.5 text-xs text-muted-foreground">
+                          <Gauge className="h-3 w-3" aria-hidden="true" />
+                          {(doc.odo ?? 0).toLocaleString()} km
+                        </span>
 
-                      <span className="hidden text-xs text-muted-foreground md:block">
-                        {formatDateTime(doc.createdAt)}
-                      </span>
+                        <span className="hidden text-xs text-muted-foreground md:block">
+                          {formatDateTime(doc.createdAt)}
+                        </span>
 
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "shrink-0",
-                          isRegistered
-                            ? "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
-                            : "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400"
-                        )}
-                      >
-                        {doc.registrationStatus}
-                      </Badge>
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            "shrink-0",
+                            isRegistered
+                              ? "border-sky-200 bg-sky-50 text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-400"
+                              : "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-400"
+                          )}
+                        >
+                          {doc.registrationStatus}
+                        </Badge>
 
-                      <ArrowUpRight
-                        className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
-                        aria-hidden="true"
-                      />
+                        <ArrowUpRight
+                          className="h-4 w-4 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+                          aria-hidden="true"
+                        />
+                      </div>
                     </Link>
                   </li>
                 );

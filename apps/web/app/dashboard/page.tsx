@@ -4,11 +4,13 @@ import {
   Bike,
   CalendarDays,
   FileText,
+  AlertTriangle,
   Gauge,
   LayoutDashboard,
   Mail,
   Shield,
   ShieldAlert,
+  ShieldCheck,
   Sparkles,
   Wallet,
   type LucideIcon,
@@ -19,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CopyButton } from "@/components/dashboard/copy-button";
+import HeroSearch from "@/components/dashboard/hero-search";
 import { getSession } from "@/lib/session";
 import { cn } from "@/lib/utils";
 import type { BikeDetailsType } from "@/types";
@@ -81,6 +84,35 @@ const AdminDashboard = async () => {
     0
   );
 
+  // Trend: documents added this week / month
+  const now = Date.now();
+  const DAY = 24 * 60 * 60 * 1000;
+  const addedThisWeek = documents.filter(
+    (bike) => now - new Date(bike.createdAt).getTime() <= 7 * DAY
+  ).length;
+  const addedThisMonth = documents.filter(
+    (bike) => now - new Date(bike.createdAt).getTime() <= 30 * DAY
+  ).length;
+
+  // Unregistered bikes for the alert banner
+  const unregisteredBikes = documents.filter(
+    (bike) => bike.registrationStatus !== "Registered"
+  );
+
+  // Pending security deposits with aging
+  const pendingSecurityDocs = documents
+    .filter(
+      (bike) => bike.securityAmount > 0 && !bike.securityMoneyReturned
+    )
+    .map((bike) => ({
+      ...bike,
+      daysPending: Math.max(
+        0,
+        Math.floor((now - new Date(bike.createdAt).getTime()) / DAY)
+      ),
+    }))
+    .sort((a, b) => b.daysPending - a.daysPending);
+
   return (
     <div className="space-y-6">
       {/* Hero header — compact */}
@@ -125,6 +157,7 @@ const AdminDashboard = async () => {
           </div>
 
           <div className="ml-auto flex shrink-0 items-center gap-2">
+            <HeroSearch documents={documents} />
             <Button
               asChild
               size="sm"
@@ -139,6 +172,41 @@ const AdminDashboard = async () => {
         </div>
       </section>
 
+      {/* Unregistered bikes alert */}
+      {unregisteredBikes.length > 0 && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-500/30 dark:bg-amber-500/10">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-400">
+              <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {unregisteredBikes.length} bike
+              {unregisteredBikes.length > 1 ? "s" : ""} still not registered
+            </p>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {unregisteredBikes.slice(0, 3).map((bike) => (
+                <Link
+                  key={bike._id}
+                  href={`/dashboard/documents/${bike._id}`}
+                  className="inline-flex max-w-[220px] items-center gap-1.5 rounded-full border border-amber-300 bg-white/60 px-2.5 py-1 text-xs text-amber-800 transition-colors hover:bg-white dark:border-amber-500/40 dark:bg-transparent dark:text-amber-300 dark:hover:bg-amber-500/20"
+                >
+                  <Bike className="h-3 w-3 shrink-0" aria-hidden="true" />
+                  <span className="truncate capitalize">
+                    {bike.bikeBrand} {bike.bikeModel}
+                  </span>
+                </Link>
+              ))}
+              {unregisteredBikes.length > 3 && (
+                <Link
+                  href="/dashboard/documents"
+                  className="text-xs font-medium text-amber-700 underline-offset-2 hover:underline dark:text-amber-400"
+                >
+                  +{unregisteredBikes.length - 3} more
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Document statistics */}
       <section
         aria-label="Document statistics"
@@ -148,7 +216,14 @@ const AdminDashboard = async () => {
           icon={FileText}
           label="Total documents"
           value={documents.length}
-          hint="Bike records on file"
+          hint={
+            addedThisWeek > 0
+              ? `+${addedThisWeek} this week · +${addedThisMonth} this month`
+              : "Bike records on file"
+          }
+          tone={
+            addedThisWeek > 0 ? "text-sky-600 dark:text-sky-400" : undefined
+          }
         />
         <DocStat
           icon={Bike}
@@ -180,8 +255,9 @@ const AdminDashboard = async () => {
         />
       </section>
 
-      {/* Recent documents */}
-      <Card className="border-border/60 shadow-sm">
+      {/* Recent documents + security aging */}
+      <div className="grid gap-6 xl:grid-cols-3">
+        <Card className="border-border/60 shadow-sm xl:col-span-2">
         <CardHeader className="flex-row items-start justify-between space-y-0 p-4 sm:p-6">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -278,15 +354,78 @@ const AdminDashboard = async () => {
           )}
         </CardContent>
 
-        <div className="border-t border-border/60 p-3 sm:px-4">
-          <Button asChild variant="ghost" size="sm" className="w-full">
-            <Link href="/dashboard/documents">
-              View all documents
-              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
-          </Button>
-        </div>
-      </Card>
+          <div className="border-t border-border/60 p-3 sm:px-4">
+            <Button asChild variant="ghost" size="sm" className="w-full">
+              <Link href="/dashboard/documents">
+                View all documents
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
+        </Card>
+
+        {/* Security money aging */}
+        <Card className="border-border/60 shadow-sm">
+          <CardHeader className="p-4 sm:p-6 sm:pb-4">
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Wallet className="h-4 w-4 text-primary" aria-hidden="true" />
+              Security deposits
+            </CardTitle>
+            <CardDescription>
+              Pending returns, oldest first
+            </CardDescription>
+          </CardHeader>
+
+          <CardContent className="p-4 pt-0 sm:p-6 sm:pt-0">
+            {pendingSecurityDocs.length === 0 ? (
+              <p className="flex items-center gap-2 rounded-lg border border-dashed border-border/60 px-3 py-6 text-center text-sm text-muted-foreground">
+                <ShieldCheck className="h-4 w-4 text-sky-500" aria-hidden="true" />
+                All security deposits have been returned.
+              </p>
+            ) : (
+              <ol className="space-y-1.5">
+                {pendingSecurityDocs.map((doc) => {
+                  const isOld = doc.daysPending > 30;
+
+                  return (
+                    <li key={doc._id}>
+                      <Link
+                        href={`/dashboard/documents/${doc._id}`}
+                        className={cn(
+                          "flex items-center gap-2.5 rounded-lg border p-2.5 transition-colors",
+                          isOld
+                            ? "border-amber-200 bg-amber-50 hover:bg-amber-100 dark:border-amber-500/30 dark:bg-amber-500/10 dark:hover:bg-amber-500/20"
+                            : "border-border/60 hover:bg-muted/60"
+                        )}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium capitalize">
+                            {doc.bikeBrand} {doc.bikeModel}
+                          </p>
+                          <p className="truncate text-xs text-muted-foreground">
+                            {doc.name} ·{" "}
+                            {formatCurrency(doc.securityAmount)}
+                          </p>
+                        </div>
+                        <span
+                          className={cn(
+                            "shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium",
+                            isOld
+                              ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
+                              : "bg-muted text-muted-foreground"
+                          )}
+                        >
+                          {doc.daysPending}d
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ol>
+            )}
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Tips */}
       <Card className="border-primary/20 bg-primary/5 shadow-none">

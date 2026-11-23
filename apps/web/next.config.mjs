@@ -27,8 +27,11 @@ const nextConfig = {
     ],
   },
   experimental: {
+    // Requests passing through proxy.ts buffer the body in memory;
+    // the 10MB default truncated large uploads ("Unexpected end of form").
+    proxyClientMaxBodySize: "1gb",
     serverActions: {
-      bodySizeLimit: "100mb",
+      bodySizeLimit: "1gb",
     },
   },
 };

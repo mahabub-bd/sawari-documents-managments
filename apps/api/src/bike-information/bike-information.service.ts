@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -9,6 +9,8 @@ import { BikeInformation } from './schemas/bike-information.schema';
 
 @Injectable()
 export class BikeInformationService {
+  private readonly logger = new Logger(BikeInformationService.name);
+
   constructor(
     @InjectModel(BikeInformation.name)
     private readonly bikeInformationModel: Model<BikeInformation>,
@@ -31,11 +33,20 @@ export class BikeInformationService {
       };
       const response = await this.bikeInformationModel.create(data);
 
-      await this.userActivityService.logActivity(
-        createdBy,
-        'Bike Info Created',
-        path,
+      this.logger.log(
+        `Bike created: id=${response._id} by user=${createdBy} path=${path}`,
       );
+
+      try {
+        await this.userActivityService.logActivity(
+          createdBy,
+          'Bike Info Created',
+          path,
+        );
+      } catch (logError) {
+        // Never fail the create just because activity logging failed
+        console.error('Error logging Bike Info Created activity:', logError);
+      }
 
       return {
         message: 'Bike Information created successfully',
@@ -43,12 +54,23 @@ export class BikeInformationService {
         data: response,
       };
     } catch (error) {
-      console.error('Error creating Bike Information:', error);
+      this.logger.error(
+        `Bike create failed for user=${createdBy} path=${path}: ${error instanceof Error ? error.message : error}`,
+      );
+      try {
+        await this.userActivityService.logActivity(
+          createdBy,
+          'Bike Info Create Failed',
+          path,
+        );
+      } catch {
+        // ignore secondary logging failures
+      }
       throw new HttpException(
         {
           message: 'Failed to create Bike Information',
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          error: error.message || 'An unexpected error occurred',
+          error: error instanceof Error ? error.message : 'An unexpected error occurred',
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
